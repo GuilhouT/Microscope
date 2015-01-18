@@ -1,3 +1,16 @@
+Template.postEdit.created = function () {
+  Session.set('postEditErrors', {});
+};
+
+Template.postEdit.helpers({
+  errorClass: function (field) {
+    return !!Session.get('postEditErrors')[field] ? 'has-error' : '';
+  },
+  errorMessage: function (field) {
+    return Session.get('postEditErrors')[field];
+  }
+});
+
 Template.postEdit.events({
   'submit form': function(e) {
     e.preventDefault();
@@ -7,6 +20,11 @@ Template.postEdit.events({
     var postProperties = {
       url: $(e.target).find('[name=url]').val(),
       title: $(e.target).find('[name=title]').val()
+    }
+
+    var errors = postValidate(postProperties);
+    if (!_.isEmpty(errors)) {
+      return Session.set('postEditErrors', errors);
     }
 
     Posts.update(currentPostId, {$set: postProperties}, function(error) {
