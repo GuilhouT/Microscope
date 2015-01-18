@@ -22,7 +22,7 @@ Template.postEdit.events({
       title: $(e.target).find('[name=title]').val()
     }
 
-    var errors = postValidate(postProperties);
+    var errors = validatePost(postProperties);
     if (!_.isEmpty(errors)) {
       return Session.set('postEditErrors', errors);
     }
